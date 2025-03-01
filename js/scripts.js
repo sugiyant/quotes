@@ -142,27 +142,24 @@ document.addEventListener('DOMContentLoaded', () => {
         newWindow.document.close();
     }
 
-    generateQuoteButton.addEventListener('click', () => {
+    document.getElementById('generate-quote').addEventListener('click', function() {
+        clickCounter++; // Increment counter
+        
+        // Generate new quote
         const randomChoice = Math.random() < 0.5;
         if (randomChoice) {
             fetchRandomQuranQuote();
         } else {
             fetchRandomHadisQuote();
         }
-    });
-
-    document.getElementById('generate-quote').addEventListener('click', function() {
-        clickCounter++; // Increment counter setiap klik
         
-        // Cek jika sudah 3 kali klik
-        if (clickCounter >= 7) {
-            clickCounter = 0; // Reset counter
+        // Check for reload
+        if (clickCounter >= 15) {
+            clickCounter = 0;
             setTimeout(() => {
-                location.reload(); // Reload halaman setelah delay singkat
-            }, 500); // Delay 500ms agar user bisa melihat quote terakhir
+                location.reload();
+            }, 500);
         }
-        
-        generateQuote(); // Fungsi yang sudah ada untuk generate quote
     });
 
     showTafsirButton.addEventListener('click', showTafsir);
