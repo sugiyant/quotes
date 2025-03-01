@@ -284,6 +284,23 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHadisData();
 
     // Theme Switcher
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeMenu = document.querySelector('.theme-menu');
+    const arrow = themeToggle.querySelector('.arrow');
+
+    themeToggle.addEventListener('click', () => {
+        themeMenu.classList.toggle('show');
+        arrow.style.transform = themeMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0)';
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!themeToggle.contains(e.target) && !themeMenu.contains(e.target)) {
+            themeMenu.classList.remove('show');
+            arrow.style.transform = 'rotate(0)';
+        }
+    });
+
     const themeSwitchers = {
         'theme-light': 'light',
         'theme-dark': 'dark',
@@ -298,11 +315,13 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', () => {
                 document.documentElement.setAttribute('data-theme', themeSwitchers[id]);
                 localStorage.setItem('theme', themeSwitchers[id]);
+                themeMenu.classList.remove('show');
+                arrow.style.transform = 'rotate(0)';
             });
         }
     });
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    // Load saved theme or use sepia as default
+    const savedTheme = localStorage.getItem('theme') || 'sepia';
     document.documentElement.setAttribute('data-theme', savedTheme);
 });
