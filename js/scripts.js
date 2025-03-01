@@ -105,37 +105,152 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function takeScreenshot() {
-        const quoteCard = document.querySelector(".quote-card");
+        const currentQuoteHTML = quoteText.innerHTML;
+        const currentURL = window.location.origin;
         
-        // Membuat style untuk tampilan screenshot
         const styles = `
             <style>
-                body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-                .quote-card { background: white; padding: 20px; max-width: 600px; margin: 0 auto; }
-                .arabic { font-size: 24px; font-family: 'Amiri', serif; text-align: right; }
-                .translation { font-size: 18px; color: #555; }
-                .surah-info, .hadis-info { font-size: 14px; color: #888; }
-                .website-link { margin-top: 20px; text-align: center; }
-                .website-link a { color: #007BFF; text-decoration: none; }
+                body { 
+                    margin: 0; 
+                    padding: 20px; 
+                    font-family: Arial, sans-serif;
+                    background-color: #f8f9fa;
+                }
+                .screenshot-container {
+                    background: white;
+                    padding: 30px;
+                    max-width: 600px;
+                    margin: 20px auto;
+                    border-radius: 12px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .arabic { 
+                    font-family: 'Amiri', serif;
+                    font-size: 28px;
+                    line-height: 1.6;
+                    text-align: right;
+                    margin-bottom: 20px;
+                    color: #000;
+                }
+                .translation { 
+                    font-size: 18px;
+                    line-height: 1.6;
+                    color: #444;
+                    margin-bottom: 15px;
+                }
+                .surah-info, .hadis-info { 
+                    font-size: 14px;
+                    color: #666;
+                    text-align: right;
+                }
+                .website-link {
+                    margin-top: 20px;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #666;
+                }
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin: 20px auto;
+                }
+                .capture-button, .copy-button {
+                    width: 200px;
+                    padding: 10px;
+                    background: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                }
+                .capture-button:hover {
+                    background: #45a049;
+                }
+                .copy-button {
+                    background: #2196F3;
+                }
+                .copy-button:hover {
+                    background: #1976D2;
+                }
+                .success-message {
+                    display: none;
+                    text-align: center;
+                    color: #4CAF50;
+                    margin-top: 10px;
+                }
+                .quote-source {
+                    text-align: center;
+                    font-size: 14px;
+                    color: #666;
+                    margin-top: 15px;
+                    border-top: 1px solid #eee;
+                    padding-top: 10px;
+                }
             </style>
         `;
 
-        // Membuat jendela baru dengan konten yang akan di-screenshot
-        const newWindow = window.open();
+        const newWindow = window.open('', '_blank', 'width=700,height=600');
         newWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
+                <title>Screenshot Kutipan</title>
                 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
                 ${styles}
             </head>
             <body>
-                <div class="quote-card">
-                    ${quoteCard.innerHTML}
+                <div class="screenshot-container">
+                    ${currentQuoteHTML}
+                    <div class="quote-source">
+                        <p>Sumber: ${currentURL}</p>
+                    </div>
                 </div>
                 <div class="website-link">
-                    <a href="https://yourwebsite.com">https://yourwebsite.com</a>
+                    <p>Sumber: ${currentURL}</p>
                 </div>
+                <div class="button-container">
+                    <button class="capture-button" onclick="captureAndDownload()">📸 Ambil Screenshot</button>
+                    <button class="copy-button" onclick="copyToClipboard()">📋 Salin ke Clipboard</button>
+                </div>
+                <p id="success-message" class="success-message">✅ Berhasil disalin ke clipboard!</p>
+                <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+                <script>
+                    function captureAndDownload() {
+                        const container = document.querySelector('.screenshot-container');
+                        html2canvas(container).then(canvas => {
+                            // Convert to image and trigger download
+                            const image = canvas.toDataURL('image/png');
+                            const link = document.createElement('a');
+                            link.download = 'kutipan-islami.png';
+                            link.href = image;
+                            link.click();
+                        });
+                    }
+
+                    async function copyToClipboard() {
+                        const container = document.querySelector('.screenshot-container');
+                        try {
+                            const canvas = await html2canvas(container);
+                            canvas.toBlob(async (blob) => {
+                                await navigator.clipboard.write([
+                                    new ClipboardItem({
+                                        'image/png': blob
+                                    })
+                                ]);
+                                const msg = document.getElementById('success-message');
+                                msg.style.display = 'block';
+                                setTimeout(() => {
+                                    msg.style.display = 'none';
+                                }, 2000);
+                            });
+                        } catch (err) {
+                            console.error('Gagal menyalin ke clipboard:', err);
+                            alert('Maaf, gagal menyalin ke clipboard');
+                        }
+                    }
+                </script>
             </body>
             </html>
         `);
