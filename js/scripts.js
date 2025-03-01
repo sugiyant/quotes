@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isHadis: false
     };
 
+    let clickCounter = 0; // Tambahkan counter di luar event listener
+
     async function fetchRandomQuranQuote() {
         const randomSurahNumber = Math.floor(Math.random() * 114) + 1;
         const surahData = await loadSurahData(randomSurahNumber);
@@ -147,6 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             fetchRandomHadisQuote();
         }
+    });
+
+    document.getElementById('generate-quote').addEventListener('click', function() {
+        clickCounter++; // Increment counter setiap klik
+        
+        // Cek jika sudah 3 kali klik
+        if (clickCounter >= 7) {
+            clickCounter = 0; // Reset counter
+            setTimeout(() => {
+                location.reload(); // Reload halaman setelah delay singkat
+            }, 500); // Delay 500ms agar user bisa melihat quote terakhir
+        }
+        
+        generateQuote(); // Fungsi yang sudah ada untuk generate quote
     });
 
     showTafsirButton.addEventListener('click', showTafsir);
