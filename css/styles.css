@@ -44,10 +44,18 @@ body {
     margin-top: 10px;
 }
 
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
 .container {
-    width: 90%;
+    width: 100%;
     max-width: 800px;
-    margin: 20px auto;
     padding: 20px;
     background-color: var(--container-bg);
     min-height: auto; /* Menghapus min-height yang tetap */
@@ -196,25 +204,83 @@ button:hover {
 
 /* Theme Switcher Styles */
 .theme-switcher {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    width: 100%;
+    max-width: 800px;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    max-width: 200px;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    z-index: 50;
+}
+
+.theme-switcher #theme-toggle {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.theme-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 150px;
+    width: auto;
     z-index: 1000;
 }
 
-.theme-switcher button {
-    padding: 8px 12px;
+.theme-menu.show {
+    display: flex;
+}
+
+.theme-menu button {
+    padding: 12px 20px;
     font-size: 14px;
-    opacity: 0.8;
-    transition: opacity 0.3s;
+    border: none;
+    background: transparent;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.theme-menu button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-switcher button {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    min-width: 100px;
 }
 
 .theme-switcher button:hover {
     opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Media Queries */
@@ -252,10 +318,26 @@ button:hover {
     }
 
     .theme-switcher {
-        position: static;
         margin: 10px auto;
-        justify-content: center;
-        max-width: 100%;
+    }
+
+    .theme-switcher #theme-toggle {
+        padding: 8px 15px;
+        font-size: 13px;
+        min-width: 100px;
+    }
+
+    .theme-menu {
+        min-width: 130px;
+    }
+
+    .theme-menu button {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .container {
+        margin-top: 5px;
     }
 }
 
@@ -263,5 +345,41 @@ button:hover {
     .container {
         padding: 15px;
         width: 90%;
+        margin-top: 10px;
+    }
+
+    .theme-switcher {
+        bottom: 15px;
+    }
+
+    .theme-switcher #theme-toggle {
+        padding: 9px 18px;
+        font-size: 13px;
+    }
+
+    .theme-menu {
+        min-width: 140px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .page-wrapper {
+        padding: 10px;
+    }
+
+    .theme-switcher {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        margin-top: 15px;
+    }
+
+    .theme-switcher #theme-toggle {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+
+    .theme-menu {
+        font-size: 13px;
     }
 }
